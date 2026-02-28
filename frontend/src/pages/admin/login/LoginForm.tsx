@@ -7,6 +7,7 @@ import Input from '@/components/Input';
 import Modal from '@/components/Modal';
 import { useAdminLoginForm } from '@/hooks/useAdminLoginForm';
 import { useForgetPassword } from '@/hooks/useForgetPassword';
+import NewPasswordForm from '@/pages/admin/newPassword/NewPasswordForm';
 
 export type ResetModalSteps = 'email' | 'submit';
 
@@ -111,7 +112,8 @@ const ResetPasswordModal = () => {
 };
 
 const LoginForm = () => {
-  const { form, submit, isSubmitting } = useAdminLoginForm();
+  const [showNewPasswordModal, setShowNewPasswordModal] = useState(false);
+  const { form, submit, isSubmitting } = useAdminLoginForm(() => setShowNewPasswordModal(true));
   const [showPassword, setShowPassword] = useState(false);
   const onEnterKey = (event: KeyboardEvent) => {
     if (event.key === 'Enter') {
@@ -122,45 +124,55 @@ const LoginForm = () => {
   const onShowPassword = () => setShowPassword((prev) => !prev);
 
   return (
-    <FormProvider {...form}>
-      <form onKeyDown={onEnterKey}>
-        <div className="space-y-8">
-          <FormItem name="email">
-            {({ field }) => (
-              <div className="space-y-4">
-                <FormLabel>Email</FormLabel>
-                <Input type="email" {...field} />
-                <FormError />
-              </div>
-            )}
-          </FormItem>
-
-          <FormItem name="password">
-            {({ field }) => (
-              <div className="flex flex-col items-start space-y-2">
-                <FormLabel>Password</FormLabel>
-                <div className="w-full inline-flex items-center">
-                  <Input type={showPassword ? 'text' : 'password'} {...field} className="pr-8" />
-                  <Icon
-                    name={showPassword ? 'EyeOff' : 'Eye'}
-                    className="-ml-8 cursor-pointer hover:text-muted-foreground transition-colors"
-                    onClick={onShowPassword}
-                  />
+    <>
+      <Modal
+        modalTitle="Set New Password"
+        modalDescription="Your temporary password must be changed before you can continue."
+        visible={showNewPasswordModal}
+        onOpenChange={setShowNewPasswordModal}
+      >
+        <NewPasswordForm />
+      </Modal>
+      <FormProvider {...form}>
+        <form onKeyDown={onEnterKey}>
+          <div className="space-y-8">
+            <FormItem name="email">
+              {({ field }) => (
+                <div className="space-y-4">
+                  <FormLabel>Email</FormLabel>
+                  <Input type="email" {...field} />
+                  <FormError />
                 </div>
-                <FormError />
-              </div>
-            )}
-          </FormItem>
-        </div>
+              )}
+            </FormItem>
 
-        <div className="flex justify-between">
-          <ResetPasswordModal />
-          <Button onClick={submit} className="w-full min-w-min max-w-[20%]" loading={isSubmitting}>
-            Submit
-          </Button>
-        </div>
-      </form>
-    </FormProvider>
+            <FormItem name="password">
+              {({ field }) => (
+                <div className="flex flex-col items-start space-y-2">
+                  <FormLabel>Password</FormLabel>
+                  <div className="w-full inline-flex items-center">
+                    <Input type={showPassword ? 'text' : 'password'} {...field} className="pr-8" />
+                    <Icon
+                      name={showPassword ? 'EyeOff' : 'Eye'}
+                      className="-ml-8 cursor-pointer hover:text-muted-foreground transition-colors"
+                      onClick={onShowPassword}
+                    />
+                  </div>
+                  <FormError />
+                </div>
+              )}
+            </FormItem>
+          </div>
+
+          <div className="flex justify-between">
+            <ResetPasswordModal />
+            <Button onClick={submit} className="w-full min-w-min max-w-[20%]" loading={isSubmitting}>
+              Submit
+            </Button>
+          </div>
+        </form>
+      </FormProvider>
+    </>
   );
 };
 
