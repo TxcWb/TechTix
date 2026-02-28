@@ -43,6 +43,17 @@ export const useNewPasswordForm = () => {
       navigate('/admin/login');
     } catch (e) {
       if (e instanceof AuthError) {
+        // SignInException is thrown by Amplify when there is no active sign-in challenge,
+        // e.g. if the user navigated directly to this page without going through login first.
+        if (e.name === 'SignInException') {
+          errorToast({
+            id: 'new-password-error',
+            title: 'Session expired',
+            description: 'Your session has expired. Please sign in again.'
+          });
+          navigate('/admin/login');
+          return;
+        }
         errorToast({
           id: 'new-password-error',
           title: 'There was a problem setting your new password.',

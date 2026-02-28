@@ -17,7 +17,7 @@ const LoginFormSchema = z.object({
 
 export const useAdminLoginForm = () => {
   const auth = useCurrentAdminUser();
-  const { errorToast } = useNotifyToast();
+  const { errorToast, infoToast } = useNotifyToast();
   const { navigate } = useNavigateTo();
 
   const form = useForm<z.infer<typeof LoginFormSchema>>({
@@ -36,6 +36,11 @@ export const useAdminLoginForm = () => {
         password
       });
       if (nextStep.signInStep === 'CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED') {
+        infoToast({
+          id: 'new-password-required',
+          title: 'Password change required',
+          description: 'Your temporary password must be changed before you can continue.'
+        });
         navigate('/admin/new-password');
         return;
       }
@@ -48,10 +53,13 @@ export const useAdminLoginForm = () => {
           title: 'There was a problem signing in.',
           description: e.message
         });
-        throw Error(e.message);
       } else {
         console.error(e);
-        throw Error();
+        errorToast({
+          id: 'sign-in-error',
+          title: 'There was a problem signing in.',
+          description: 'An unexpected error occurred.'
+        });
       }
     }
   });
