@@ -31,10 +31,14 @@ export const useAdminLoginForm = () => {
 
   const submit = form.handleSubmit(async ({ email, password }) => {
     try {
-      await signIn({
+      const { nextStep } = await signIn({
         username: email,
         password
       });
+      if (nextStep.signInStep === 'CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED') {
+        navigate('/admin/new-password');
+        return;
+      }
       await auth.refetchUser?.();
       navigate('/admin/events');
     } catch (e) {
