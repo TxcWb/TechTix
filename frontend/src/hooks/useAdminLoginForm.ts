@@ -15,7 +15,7 @@ const LoginFormSchema = z.object({
   })
 });
 
-export const useAdminLoginForm = () => {
+export const useAdminLoginForm = (onNewPasswordRequired?: () => void) => {
   const auth = useCurrentAdminUser();
   const { errorToast, infoToast } = useNotifyToast();
   const { navigate } = useNavigateTo();
@@ -41,7 +41,7 @@ export const useAdminLoginForm = () => {
           title: 'Password change required',
           description: 'Your temporary password must be changed before you can continue.'
         });
-        navigate('/admin/new-password');
+        onNewPasswordRequired?.();
         return;
       }
       await auth.refetchUser?.();

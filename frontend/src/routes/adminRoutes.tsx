@@ -12,7 +12,6 @@ import AdminEventInfo from '@/pages/admin/event/info/AdminEventInfo';
 import AdminEventRegistrations from '@/pages/admin/event/pycon/registrations/AdminEventRegistrations';
 // import AdminEventRegistrations from '@/pages/admin/event/registrations/AdminEventRegistrations';
 import AdminLoginPage from '@/pages/admin/login/AdminLoginPage';
-import NewPasswordPage from '@/pages/admin/newPassword/NewPasswordPage';
 import UpdatePasswordPage from '@/pages/admin/updatePassword/UpdatePasswordPage';
 import AdminAuthRouteLayout from './layouts/admin/AdminAuthRouteLayout';
 import AdminRouteLayout from './layouts/admin/AdminRouteLayout';
@@ -34,10 +33,6 @@ const adminRoutes: RouteObject[] = [
           {
             path: 'update-password',
             element: <UpdatePasswordPage />
-          },
-          {
-            path: 'new-password',
-            element: <NewPasswordPage />
           }
         ]
       },
